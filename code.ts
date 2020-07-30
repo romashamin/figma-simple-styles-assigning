@@ -22,27 +22,10 @@ function getReceiverSourcePairs(styles) {
     });
     return pairs;
   }, []);
-  /* var receiverSourcePairs = [];
-  const stylesSorted = [...styles].sort(
-    (a, b) => b.name.length - a.name.length
-  );
-  styles.forEach((currentStyle) => {
-    const source = getSourceForPaintStyle(currentStyle, stylesSorted);
-    const receiver = currentStyle;
-    receiverSourcePairs.push({
-      receiver: receiver,
-      source: source,
-    });
-  });
-  return receiverSourcePairs; */
 }
 
 function getPaintStyleByName(styleName, styles) {
-  const stylesWithGivenName = styles.filter(
-    (style) => style.name === styleName
-  );
-  const firstStyleWithGivenName = stylesWithGivenName[0];
-  return firstStyleWithGivenName;
+  return styles.filter((style) => style.name === styleName)[0];
 }
 
 // Start point
