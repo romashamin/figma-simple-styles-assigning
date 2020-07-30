@@ -21,7 +21,7 @@ function getReceiverSourcePairs(styles) {
 }
 
 function getPaintStyleByName(styleName, styles) {
-  return styles.filter((style) => style.name === styleName)[0];
+  return styles.find((style) => style.name === styleName);
 }
 
 // Start point
