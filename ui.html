@@ -148,11 +148,8 @@
     switch (messageType) {
       case "render": {
         const receiverSourceData = event.data.pluginMessage.receiverSourceData;
-        function accumulateMarkupRows(resultString, data) {
-          return (resultString += markupRow(data));
-        }
         const rowMarkupString = receiverSourceData.reduce(
-          accumulateMarkupRows,
+          (resultString, data) => resultString + markupRow(data),
           ""
         );
         elementStylesAssigningsList.innerHTML = rowMarkupString;
