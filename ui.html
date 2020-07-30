@@ -1,0 +1,167 @@
+<!-- Styles -->
+
+<style>
+  :root {
+    /* Colors */
+    --color-local-black: #333333;
+    --color-gray-light: #b3b3b3;
+    --color-gray-light-mx: rgba(0, 0, 0, 0.2);
+    --color-figma-accent: #18a0fb;
+    --color-figma-accent-extra-light: #daebf7;
+    --color-figma-accent-extra-light-mx: rgba(24, 160, 251, 0.18);
+    /* Font Sizes */
+    --font-size-4m: 11.2px;
+    /* Spacings */
+    --space-unit: 2px;
+    --space-2m: calc(2 * var(--space-unit));
+    --space-3m: calc(3 * var(--space-unit));
+    --space-4m: calc(4 * var(--space-unit));
+    --space-7m: calc(7 * var(--space-unit));
+    --space-8m: calc(8 * var(--space-unit));
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--font-size-4m);
+    line-height: var(--space-7m);
+  }
+  .styles-assigning-list {
+    margin: 0;
+    padding: var(--space-4m) 0;
+  }
+  .styles-assigning-row {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0 var(--space-8m);
+    list-style: none;
+  }
+  .assign-operator {
+    width: var(--space-8m);
+    height: var(--space-8m);
+    color: var(--color-gray-light-mx);
+  }
+  .style-source-input {
+    /* Reset */
+    margin: 0;
+    border: none;
+    background-image: none;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+
+    /* Styles */
+    padding: var(--space-3m) 0 var(--space-3m) var(--space-3m);
+    border-radius: 0.5px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: var(--font-size-4m);
+    line-height: var(--space-7m);
+  }
+  .style-source-input:hover {
+    background-color: white;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
+  }
+  .style-source-input:focus {
+    outline: none;
+    background-color: white;
+    box-shadow: inset 0px 0px 0px 1px var(--color-figma-accent),
+      0px 0px 0px 1px var(--color-figma-accent);
+  }
+
+  .flex-item__flexible-width {
+    flex: auto;
+    flex-basis: 100%;
+    min-width: 0;
+  }
+  .flex-item__fixed-width--8m {
+    flex: 0 0 var(--space-8m);
+  }
+</style>
+
+<!-- HTML -->
+
+<ul class="styles-assigning-list"></ul>
+
+<!-- JavaScript -->
+
+<script>
+  // Helpers
+
+  function markupRow(receiverSourceData) {
+    return `<li class="styles-assigning-row">
+    <span class="style-receiver flex-item__flexible-width">${receiverSourceData.receiver.name}</span>
+    <span class="assign-operator flex-item__fixed-width--8m"> = </span>
+    <input
+      id="${receiverSourceData.source.idDOMElement}"
+      data-id-figma-paint-style="${receiverSourceData.receiver.idFigmaPaintStyle}"
+      class="style-source-input flex-item__flexible-width"
+      type="text"
+      placeholder="None"
+      value="${receiverSourceData.source.name}"
+    >
+  </li>`;
+  }
+
+  function handleTextFieldChange(event) {
+    const name = event.target.value;
+    parent.postMessage(
+      {
+        pluginMessage: {
+          type: "update-name-in-description",
+          newName: name,
+          idFigmaNode: event.target.dataset.idFigmaPaintStyle,
+        },
+      },
+      "*"
+    );
+    parent.postMessage(
+      {
+        pluginMessage: {
+          type: "assign-new-source",
+          sourceName: name,
+          idFigmaNode: event.target.dataset.idFigmaPaintStyle,
+        },
+      },
+      "*"
+    );
+  }
+
+  // Main
+
+  const elementStylesAssigningsList = document.querySelector(
+    ".styles-assigning-list"
+  );
+  elementStylesAssigningsList.addEventListener(
+    "change",
+    handleTextFieldChange,
+    false
+  );
+
+  // Events handler
+
+  onmessage = (event) => {
+    const messageType = event.data.pluginMessage.type;
+
+    switch (messageType) {
+      case "render": {
+        const receiverSourceData = event.data.pluginMessage.receiverSourceData;
+        function accumulateMarkupRows(resultString, data) {
+          return (resultString += markupRow(data));
+        }
+        const rowMarkupString = receiverSourceData.reduce(
+          accumulateMarkupRows,
+          ""
+        );
+        elementStylesAssigningsList.innerHTML = rowMarkupString;
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
+  };
+</script>
