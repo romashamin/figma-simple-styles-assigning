@@ -12,7 +12,17 @@ function getSourceForPaintStyle(style, styles) {
 }
 
 function getReceiverSourcePairs(styles) {
-  var receiverSourcePairs = [];
+  const stylesSorted = [...styles].sort(
+    (a, b) => b.name.length - a.name.length
+  );
+  return styles.reduce((pairs, style) => {
+    pairs.push({
+      receiver: style,
+      source: getSourceForPaintStyle(style, stylesSorted),
+    });
+    return pairs;
+  }, []);
+  /* var receiverSourcePairs = [];
   const stylesSorted = [...styles].sort(
     (a, b) => b.name.length - a.name.length
   );
@@ -24,7 +34,7 @@ function getReceiverSourcePairs(styles) {
       source: source,
     });
   });
-  return receiverSourcePairs;
+  return receiverSourcePairs; */
 }
 
 function getPaintStyleByName(styleName, styles) {
