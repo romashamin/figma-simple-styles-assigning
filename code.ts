@@ -52,6 +52,10 @@ figma.ui.postMessage({
 
 // Events handler
 
+function isPaintStyle(style: BaseStyle): style is PaintStyle {
+  return "paints" in style;
+}
+
 figma.ui.onmessage = (msg) => {
   switch (msg.type) {
     case "update-name-in-description": {
@@ -63,8 +67,8 @@ figma.ui.onmessage = (msg) => {
     }
 
     case "assign-new-source": {
-      const styleReceiver = figma.getStyleById(msg.idFigmaNode) as PaintStyle;
-      if (!styleReceiver) return;
+      const styleReceiver = figma.getStyleById(msg.idFigmaNode);
+      if (!styleReceiver || !isPaintStyle(styleReceiver)) return;
       const styleSource = getPaintStyleByName(msg.sourceName, styles);
       if (!styleSource) return;
       styleReceiver.paints = styleSource.paints;
