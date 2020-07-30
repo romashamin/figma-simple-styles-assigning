@@ -1,14 +1,10 @@
 // Helpers
 
 function getSourceForPaintStyle(style, styles) {
-  var source = null;
   for (const currentStyle of styles) {
-    if (style.description.includes(currentStyle.name)) {
-      source = currentStyle;
-      break;
-    }
+    if (style.description.includes(currentStyle.name)) return currentStyle;
   }
-  return source;
+  return null;
 }
 
 function getReceiverSourcePairs(styles) {
