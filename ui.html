@@ -100,7 +100,7 @@
   <span class="assign-operator flex-item__fixed-width--8m"> = </span>
   <input
     id="${source.idDOMElement}"
-    data-id-figma-paint-style="${receiver.idFigmaPaintStyle}"
+    data-id-figma-style="${receiver.idFigmaStyle}"
     class="style-source-input flex-item__flexible-width"
     type="text"
     placeholder="None"
@@ -109,14 +109,15 @@
 </li>`;
   }
 
-  function handleTextFieldChange(event) {
-    const name = event.target.value;
+  function handleTextFieldChange({ target: { value, dataset } }) {
+    const name = value;
+    const idFigmaStyle = dataset.idFigmaStyle;
     parent.postMessage(
       {
         pluginMessage: {
           type: "update-name-in-description",
           newName: name,
-          idFigmaNode: event.target.dataset.idFigmaPaintStyle,
+          idFigmaStyle,
         },
       },
       "*"
@@ -126,7 +127,7 @@
         pluginMessage: {
           type: "assign-new-source",
           sourceName: name,
-          idFigmaNode: event.target.dataset.idFigmaPaintStyle,
+          idFigmaStyle,
         },
       },
       "*"

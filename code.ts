@@ -38,7 +38,7 @@ receiverSourcePairs.forEach((pair) => {
 const receiverSourceData = receiverSourcePairs.map((pair, index) => ({
   receiver: {
     name: pair.receiver.name,
-    idFigmaPaintStyle: pair.receiver.id,
+    idFigmaStyle: pair.receiver.id,
   },
   source: {
     name: pair.source ? pair.source.name : "",
@@ -59,7 +59,7 @@ function isPaintStyle(style: BaseStyle): style is PaintStyle {
 figma.ui.onmessage = (msg) => {
   switch (msg.type) {
     case "update-name-in-description": {
-      const paintStyle = figma.getStyleById(msg.idFigmaNode);
+      const paintStyle = figma.getStyleById(msg.idFigmaStyle);
       if (!paintStyle) return;
       paintStyle.description = msg.newName;
       figma.notify(`New source style: ${msg.newName}`);
@@ -67,7 +67,7 @@ figma.ui.onmessage = (msg) => {
     }
 
     case "assign-new-source": {
-      const styleReceiver = figma.getStyleById(msg.idFigmaNode);
+      const styleReceiver = figma.getStyleById(msg.idFigmaStyle);
       if (!styleReceiver || !isPaintStyle(styleReceiver)) return;
       const styleSource = getPaintStyleByName(msg.sourceName, styles);
       if (!styleSource) return;
