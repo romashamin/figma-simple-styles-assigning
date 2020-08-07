@@ -11,13 +11,10 @@ function getReceiverSourcePairs(styles) {
   const stylesSorted = [...styles].sort(
     (a, b) => b.name.length - a.name.length
   );
-  return styles.reduce((pairs, style) => {
-    pairs.push({
-      receiver: style,
-      source: getSourceForPaintStyle(style, stylesSorted),
-    });
-    return pairs;
-  }, []);
+  return styles.map((style) => ({
+    receiver: style,
+    source: getSourceForPaintStyle(style, stylesSorted),
+  }));
 }
 
 function getPaintStyleByName(styleName, styles) {
