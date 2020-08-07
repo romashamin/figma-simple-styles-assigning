@@ -1,19 +1,19 @@
 // Helpers
 
 function getSourceForStyle(style, styles) {
-  for (const currentStyle of styles) {
+  const stylesSorted = [...styles].sort(
+    (a, b) => b.name.length - a.name.length
+  );
+  for (const currentStyle of stylesSorted) {
     if (style.description.includes(currentStyle.name)) return currentStyle;
   }
   return null;
 }
 
 function getReceiverSourcePairs(styles) {
-  const stylesSorted = [...styles].sort(
-    (a, b) => b.name.length - a.name.length
-  );
   return styles.map((style) => ({
     receiver: style,
-    source: getSourceForStyle(style, stylesSorted),
+    source: getSourceForStyle(style, styles),
   }));
 }
 
@@ -21,30 +21,32 @@ function getStyleByName(styleName, styles) {
   return styles.find((style) => style.name === styleName);
 }
 
+function assignStylesAndComposeDataForUI(styles) {
+  return styles.map((receiver, index) => {
+    const source = getSourceForStyle(receiver, styles);
+    if (source) receiver.paints = source.paints;
+    return {
+      receiver: {
+        name: receiver.name,
+        idFigmaStyle: receiver.id,
+      },
+      source: {
+        name: source ? source.name : "",
+        idDOMElement: `input-style-source-${index}`,
+      },
+    };
+  });
+}
+
 // Start point
 
 figma.showUI(__html__, { width: 600, height: 360 });
 
 const styles = figma.getLocalPaintStyles();
-const receiverSourcePairs = getReceiverSourcePairs(styles);
-receiverSourcePairs.forEach((pair) => {
-  if (pair.source) {
-    pair.receiver.paints = pair.source.paints;
-  }
-});
-const receiverSourceData = receiverSourcePairs.map((pair, index) => ({
-  receiver: {
-    name: pair.receiver.name,
-    idFigmaStyle: pair.receiver.id,
-  },
-  source: {
-    name: pair.source ? pair.source.name : "",
-    idDOMElement: `input-style-source-${index}`,
-  },
-}));
+const dataForUI = assignStylesAndComposeDataForUI(styles);
 figma.ui.postMessage({
   type: "render",
-  receiverSourceData: receiverSourceData,
+  dataForUI,
 });
 
 // Events handler

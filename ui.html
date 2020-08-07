@@ -152,7 +152,7 @@
 
     switch (messageType) {
       case "render": {
-        const rowMarkupString = pluginMessage.receiverSourceData.reduce(
+        const rowMarkupString = pluginMessage.dataForUI.reduce(
           (resultString, data) => resultString + markupRow(data),
           ""
         );
