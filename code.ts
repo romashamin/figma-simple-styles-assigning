@@ -1,6 +1,6 @@
 // Helpers
 
-function getSourceForPaintStyle(style, styles) {
+function getSourceForStyle(style, styles) {
   for (const currentStyle of styles) {
     if (style.description.includes(currentStyle.name)) return currentStyle;
   }
@@ -13,11 +13,11 @@ function getReceiverSourcePairs(styles) {
   );
   return styles.map((style) => ({
     receiver: style,
-    source: getSourceForPaintStyle(style, stylesSorted),
+    source: getSourceForStyle(style, stylesSorted),
   }));
 }
 
-function getPaintStyleByName(styleName, styles) {
+function getStyleByName(styleName, styles) {
   return styles.find((style) => style.name === styleName);
 }
 
@@ -56,9 +56,9 @@ function isPaintStyle(style: BaseStyle): style is PaintStyle {
 figma.ui.onmessage = (msg) => {
   switch (msg.type) {
     case "update-name-in-description": {
-      const paintStyle = figma.getStyleById(msg.idFigmaStyle);
-      if (!paintStyle) return;
-      paintStyle.description = msg.newName;
+      const style = figma.getStyleById(msg.idFigmaStyle);
+      if (!style) return;
+      style.description = msg.newName;
       figma.notify(`New source style: ${msg.newName}`);
       break;
     }
@@ -66,7 +66,7 @@ figma.ui.onmessage = (msg) => {
     case "assign-new-source": {
       const styleReceiver = figma.getStyleById(msg.idFigmaStyle);
       if (!styleReceiver || !isPaintStyle(styleReceiver)) return;
-      const styleSource = getPaintStyleByName(msg.sourceName, styles);
+      const styleSource = getStyleByName(msg.sourceName, styles);
       if (!styleSource) return;
       styleReceiver.paints = styleSource.paints;
     }
