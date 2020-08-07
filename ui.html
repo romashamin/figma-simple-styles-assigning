@@ -94,18 +94,19 @@
   // Helpers
 
   function markupRow({ receiver, source }) {
-    return `<li class="styles-assigning-row">
-    <span class="style-receiver flex-item__flexible-width">${receiver.name}</span>
-    <span class="assign-operator flex-item__fixed-width--8m"> = </span>
-    <input
-      id="${source.idDOMElement}"
-      data-id-figma-paint-style="${receiver.idFigmaPaintStyle}"
-      class="style-source-input flex-item__flexible-width"
-      type="text"
-      placeholder="None"
-      value="${source.name}"
-    >
-  </li>`;
+    return `
+<li class="styles-assigning-row">
+  <span class="style-receiver flex-item__flexible-width">${receiver.name}</span>
+  <span class="assign-operator flex-item__fixed-width--8m"> = </span>
+  <input
+    id="${source.idDOMElement}"
+    data-id-figma-paint-style="${receiver.idFigmaPaintStyle}"
+    class="style-source-input flex-item__flexible-width"
+    type="text"
+    placeholder="None"
+    value="${source.name}"
+  >
+</li>`;
   }
 
   function handleTextFieldChange(event) {
