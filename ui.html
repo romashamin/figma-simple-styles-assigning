@@ -147,13 +147,12 @@
 
   // Events handler
 
-  onmessage = (event) => {
-    const messageType = event.data.pluginMessage.type;
+  onmessage = ({ data: { pluginMessage } }) => {
+    const messageType = pluginMessage.type;
 
     switch (messageType) {
       case "render": {
-        const receiverSourceData = event.data.pluginMessage.receiverSourceData;
-        const rowMarkupString = receiverSourceData.reduce(
+        const rowMarkupString = pluginMessage.receiverSourceData.reduce(
           (resultString, data) => resultString + markupRow(data),
           ""
         );
