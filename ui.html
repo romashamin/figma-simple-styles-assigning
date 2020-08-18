@@ -136,10 +136,10 @@
 
   // Main
 
-  const elementStylesAssigningsList = document.querySelector(
+  const domStylesAssigningsList = document.querySelector(
     ".styles-assignings-list"
   );
-  elementStylesAssigningsList.addEventListener(
+  domStylesAssigningsList.addEventListener(
     "change",
     handleTextFieldChange,
     false
@@ -156,7 +156,7 @@
           (resultString, data) => resultString + markupRow(data),
           ""
         );
-        elementStylesAssigningsList.innerHTML = rowMarkupString;
+        domStylesAssigningsList.innerHTML = rowMarkupString;
         break;
       }
 
