@@ -59,7 +59,7 @@ figma.ui.onmessage = (msg) => {
   switch (msg.type) {
     case "update-name-in-description": {
       const style = figma.getStyleById(msg.idFigmaStyle);
-      if (!style) return;
+      if (!style) break;
       style.description = msg.newName;
       figma.notify(`New source style: ${msg.newName}`);
       break;
@@ -67,10 +67,11 @@ figma.ui.onmessage = (msg) => {
 
     case "assign-new-source": {
       const styleReceiver = figma.getStyleById(msg.idFigmaStyle);
-      if (!styleReceiver || !isPaintStyle(styleReceiver)) return;
+      if (!styleReceiver || !isPaintStyle(styleReceiver)) break;
       const styleSource = getStyleByName(msg.sourceName, styles);
-      if (!styleSource) return;
+      if (!styleSource) break;
       styleReceiver.paints = styleSource.paints;
+      break;
     }
 
     default: {
